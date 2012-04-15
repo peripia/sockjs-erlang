@@ -165,7 +165,7 @@ emit(What, State = #session{callback = Callback,
                 case What of
                     init            -> Callback:sockjs_init(Handle, UserState);
                     {recv, Data}    -> Callback:sockjs_handle(Handle, Data, UserState);
-                    {message, Data} -> Callback:sockjs_info(Handle, Data, UserState)
+                    {message, Data} -> Callback:sockjs_info(Handle, Data, UserState);
                     closed          -> Callback:sockjs_terminate(Handle, UserState)
                 end
         end,
