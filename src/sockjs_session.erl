@@ -166,6 +166,7 @@ emit(What, State = #session{callback = Callback,
                     init            -> Callback:sockjs_init(Handle, UserState);
                     {recv, Data}    -> Callback:sockjs_handle(Handle, Data, UserState);
                     {message, Data} -> Callback:sockjs_info(Handle, Data, UserState);
+                    tick            -> Callback:sockjs_tick(Handle, Data, UserState);
                     closed          -> Callback:sockjs_terminate(Handle, UserState)
                 end
         end,
@@ -274,10 +275,13 @@ handle_cast({close, Status, Reason},  State = #session{response_pid = RPid}) ->
 handle_cast(Cast, State) ->
     {stop, {odd_cast, Cast}, State}.
 
-% Allow a handle_info-like call in sockjs handler. 
+% Allow a handle_info-like call in sockjs handler. For now only messages of the form {message, X} and tick are supported
 % This is useful in cases where we have some main process sending message to processes corresponding to connections.
 handle_info({message, Raw}, State) -> 
     {noreply, emit({message, Raw}, State)};
+
+handle_info(tick, State) ->
+    {noreply, emit(tick, State)};
 
 handle_info({'EXIT', Pid, _Reason},
             State = #session{response_pid = Pid}) ->
