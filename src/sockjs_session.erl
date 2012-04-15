@@ -163,9 +163,10 @@ emit(What, State = #session{callback = Callback,
                 Callback(Handle, What, UserState);
             _ when is_atom(Callback) ->
                 case What of
-                    init         -> Callback:sockjs_init(Handle, UserState);
-                    {recv, Data} -> Callback:sockjs_handle(Handle, Data, UserState);
-                    closed       -> Callback:sockjs_terminate(Handle, UserState)
+                    init            -> Callback:sockjs_init(Handle, UserState);
+                    {recv, Data}    -> Callback:sockjs_handle(Handle, Data, UserState);
+                    {message, Data} -> Callback:sockjs_info(Handle, Data, UserState)
+                    closed          -> Callback:sockjs_terminate(Handle, UserState)
                 end
         end,
     case R of
@@ -273,6 +274,8 @@ handle_cast({close, Status, Reason},  State = #session{response_pid = RPid}) ->
 handle_cast(Cast, State) ->
     {stop, {odd_cast, Cast}, State}.
 
+handle_info({message, Raw}, State) ->
+    {noreply, emit({message, Raw}, State)};
 
 handle_info({'EXIT', Pid, _Reason},
             State = #session{response_pid = Pid}) ->
