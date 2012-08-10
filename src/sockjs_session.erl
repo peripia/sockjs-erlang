@@ -275,13 +275,16 @@ handle_cast({close, Status, Reason},  State = #session{response_pid = RPid}) ->
 handle_cast(Cast, State) ->
     {stop, {odd_cast, Cast}, State}.
 
-% Allow a handle_info-like call in sockjs handler. For now only messages of the form {message, X} and tick are supported
+% Allow a handle_info-like call in sockjs handler. For now only messages of the form {message, X}, tick, and force_disconnect are supported
 % This is useful in cases where we have some main process sending message to processes corresponding to connections.
 handle_info({message, Raw}, State) -> 
     {noreply, emit({message, Raw}, State)};
 
 handle_info(tick, State) ->
     {noreply, emit(tick, State)};
+
+handle_info(force_disconnect, State) ->
+    {noreply, emit(force_disconnect, State)};
 
 handle_info({'EXIT', Pid, _Reason},
             State = #session{response_pid = Pid}) ->
