@@ -7,7 +7,7 @@
 
 -include("sockjs_internal.hrl").
 
--define(SOCKJS_URL, "http://cdn.sockjs.org/sockjs-0.2.js").
+-define(SOCKJS_URL, "http://cdn.sockjs.org/sockjs-0.3.2.min.js").
 
 %% --------------------------------------------------------------------------
 
