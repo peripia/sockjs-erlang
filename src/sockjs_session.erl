@@ -163,9 +163,13 @@ emit(What, State = #session{callback = Callback,
                 Callback(Handle, What, UserState);
             _ when is_atom(Callback) ->
                 case What of
-                    init         -> Callback:sockjs_init(Handle, UserState);
-                    {recv, Data} -> Callback:sockjs_handle(Handle, Data, UserState);
-                    closed       -> Callback:sockjs_terminate(Handle, UserState)
+                    init            -> Callback:sockjs_init(Handle, UserState);
+                    {recv, Data}    -> Callback:sockjs_handle(Handle, Data, UserState);
+                    {message, Data} -> Callback:sockjs_info(Handle, What, UserState);
+                    {messages, Data}-> Callback:sockjs_info(Handle, What, UserState);
+                    tick            -> Callback:sockjs_info(Handle, What, UserState);
+                    force_disconnect-> Callback:sockjs_info(Handle, What, UserState);
+                    closed          -> Callback:sockjs_terminate(Handle, UserState)
                 end
         end,
     case R of
@@ -273,6 +277,19 @@ handle_cast({close, Status, Reason},  State = #session{response_pid = RPid}) ->
 handle_cast(Cast, State) ->
     {stop, {odd_cast, Cast}, State}.
 
+% Allow a handle_info-like call in sockjs handler. For now only messages of the form {message, X}, {messages, X}, tick, and force_disconnect are supported
+% This is useful in cases where we have some main process sending message to processes corresponding to connections.
+handle_info({message, Raw}, State) -> 
+    {noreply, emit({message, Raw}, State)};
+
+handle_info({messages, Raw}, State) -> 
+    {noreply, emit({messages, Raw}, State)};
+
+handle_info(tick, State) ->
+    {noreply, emit(tick, State)};
+
+handle_info(force_disconnect, State) ->
+    {noreply, emit(force_disconnect, State)};
 
 handle_info({'EXIT', Pid, _Reason},
             State = #session{response_pid = Pid}) ->
