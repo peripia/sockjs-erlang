@@ -37,9 +37,9 @@ main(_) ->
     Routes = [{'_',  [{[<<"echo">>, '...'],
                        sockjs_cowboy_handler, SockjsState}]}],
 
-    cowboy:start_listener(http, 100,
-                          cowboy_tcp_transport, [{port,     8081}],
-                          cowboy_http_protocol, [{dispatch, Routes}]),
+    cowboy:start_http(cowboy_test_http_listener, 100, 
+                      [{port, 8081}],
+                      [{dispatch, Routes}]),
     receive
         _ -> ok
     end.
