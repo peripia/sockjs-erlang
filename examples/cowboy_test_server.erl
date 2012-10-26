@@ -1,9 +1,6 @@
 #!/usr/bin/env escript
-<<<<<<< HEAD
 %%! -smp disable +A1 +K true -pa ebin -env ERL_LIBS deps -input
-=======
-%%! -pa ebin deps/cowboy/ebin -input
->>>>>>> 92d4ba4e41f6e110f97cb50ea0810e34e9b8ef4f
+
 -module(cowboy_test_server).
 -mode(compile).
 
