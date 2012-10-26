@@ -1,5 +1,9 @@
 #!/usr/bin/env escript
+<<<<<<< HEAD
 %%! -smp disable +A1 +K true -pa ebin -env ERL_LIBS deps -input
+=======
+%%! -pa ebin deps/cowboy/ebin -input
+>>>>>>> 92d4ba4e41f6e110f97cb50ea0810e34e9b8ef4f
 -module(cowboy_echo).
 -mode(compile).
 
@@ -49,4 +53,5 @@ terminate(_Req, _State) ->
 
 service_echo(_Conn, init, state)        -> {ok, state};
 service_echo(Conn, {recv, Data}, state) -> Conn:send(Data);
+service_echo(Conn, {info, _Info}, state) -> {ok, state};
 service_echo(_Conn, closed, state)      -> {ok, state}.

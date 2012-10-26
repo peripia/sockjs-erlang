@@ -1,3 +1,9 @@
+%% ***** BEGIN LICENSE BLOCK *****
+%% Copyright (c) 2011-2012 VMware, Inc.
+%%
+%% For the license see COPYING.
+%% ***** END LICENSE BLOCK *****
+
 -module(sockjs_handler).
 
 -export([init_state/4]).
@@ -28,6 +34,8 @@ init_state(Prefix, Callback, State, Options) ->
                  proplists:get_value(heartbeat_delay, Options, 25000),
              response_limit =
                  proplists:get_value(response_limit, Options, 128*1024),
+             hib_timeout =
+                 proplists:get_value(hib_timeout, Options, 5000),
              logger =
                  proplists:get_value(logger, Options, fun default_logger/3)
             }.
@@ -93,11 +101,7 @@ strip_prefix(LongPath, Prefix) ->
     end.
 
 
--type(dispatch_result() ::
-        nomatch |
-        {match, {send | recv | none , atom(),
-                 server(), session(), list(atom())}} |
-        {bad_method, list(atom())}).
+-type(dispatch_result() :: nomatch | {match, {send | recv | none , atom(), server(), session(), list(atom())}} | {bad_method, list(atom())}).
 
 -spec dispatch_req(service(), req()) -> {dispatch_result(), req()}.
 dispatch_req(#service{prefix = Prefix}, Req) ->

@@ -1,3 +1,9 @@
+%% ***** BEGIN LICENSE BLOCK *****
+%% Copyright (c) 2011-2012 VMware, Inc.
+%%
+%% For the license see COPYING.
+%% ***** END LICENSE BLOCK *****
+
 -module(sockjs_http).
 
 -export([path/1, method/1, body/1, body_qs/1, header/2, jsessionid/1,
@@ -59,6 +65,7 @@ header(K, {cowboy, Req})->
     {V, Req3} = case H of
                     undefined ->
                         cowboy_req:header(atom_to_binary(K, utf8), Req2);
+
                     _ -> {H, Req2}
                 end,
     case V of
