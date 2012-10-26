@@ -38,7 +38,7 @@ main(_) ->
                        sockjs_cowboy_handler, SockjsState}]}],
 
     cowboy:start_http(cowboy_test_http_listener, 100, 
-                      [{port, Port}],
+                      [{port, 8081}],
                       [{dispatch, Routes}]),
     receive
         _ -> ok
