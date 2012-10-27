@@ -19,6 +19,8 @@ compatible with
 https://github.com/sockjs/sockjs-client for more information on
 SockJS.
 
+Minimalistic publish/subscribe integrated with sockjs-erlang: **[sockjs-pubsub](https://github.com/blinkov/sockjs-pubsub)**
+
 
 Show me the code!
 -----------------
